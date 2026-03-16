@@ -6,10 +6,6 @@ keywords: Axelera AI, Metis AIPU, Voyager SDK, Edge AI, YOLOv8, YOLO26, Model Ex
 
 # Axelera AI Export and Deployment
 
-!!! tip "Experimental Release"
-
-    This is an experimental integration demonstrating deployment on Axelera Metis hardware. Full integration anticipated by **February 2026** with model export without requiring Axelera hardware and standard pip installation.
-
 Ultralytics partners with [Axelera AI](https://www.axelera.ai/) to enable high-performance, energy-efficient inference on [Edge AI](https://www.ultralytics.com/glossary/edge-ai) devices. Export and deploy **Ultralytics YOLO models** directly to the **Metis® AIPU** using the **Voyager SDK**.
 
 ![Axelera AI edge deployment ecosystem for YOLO](https://github.com/user-attachments/assets/c97a0297-390d-47df-bb13-ff1aa499f34a)
@@ -67,14 +63,14 @@ For turnkey solutions, Axelera partners with manufacturers to provide systems pr
 
 ## Supported Tasks
 
-Currently, Object Detection models can be exported to the Axelera format. Additional tasks are being integrated:
+The following tasks are supported across YOLOv8, YOLO11, and YOLO26 models. Note that YOLO26 segmentation is not currently supported.
 
-| Task                                                               | Status       |
-| :----------------------------------------------------------------- | :----------- |
-| [Object Detection](https://docs.ultralytics.com/tasks/detect/)     | ✅ Supported |
-| [Pose Estimation](https://docs.ultralytics.com/tasks/pose/)        | Coming soon  |
-| [Segmentation](https://docs.ultralytics.com/tasks/segment/)        | Coming soon  |
-| [Oriented Bounding Boxes](https://docs.ultralytics.com/tasks/obb/) | Coming soon  |
+| Task                                                               | YOLOv8       | YOLO11       | YOLO26       |
+| :----------------------------------------------------------------- | :----------- | :----------- | :----------- |
+| [Object Detection](https://docs.ultralytics.com/tasks/detect/)     | ✅ Supported | ✅ Supported | ✅ Supported |
+| [Pose Estimation](https://docs.ultralytics.com/tasks/pose/)        | ✅ Supported | ✅ Supported | ✅ Supported |
+| [Segmentation](https://docs.ultralytics.com/tasks/segment/)        | ✅ Supported | ✅ Supported | ❌ Not supported |
+| [Oriented Bounding Boxes](https://docs.ultralytics.com/tasks/obb/) | ✅ Supported | ✅ Supported | ✅ Supported |
 
 ## Installation
 
@@ -84,7 +80,7 @@ Currently, Object Detection models can be exported to the Axelera format. Additi
 
     - **Operating System**: Linux only (Ubuntu 22.04/24.04 recommended)
     - **Hardware**: Axelera AI accelerator ([Metis devices](https://store.axelera.ai/))
-    - **Python**: Version 3.10 (3.11 and 3.12 coming soon)
+    - **Python**: Versions 3.10, 3.11, and 3.12
 
 ### Ultralytics Installation
 
@@ -112,9 +108,8 @@ For detailed instructions, see our [Ultralytics Installation guide](../quickstar
 
     ```bash
     sudo apt update
-    sudo apt install -y axelera-voyager-sdk-base
+    sudo apt install -y metis-dkms=1.4.16
     sudo modprobe metis
-    yes | sudo /opt/axelera/sdk/latest/axelera_fix_groups.sh $USER
     ```
 
 ## Exporting YOLO Models to Axelera
@@ -229,8 +224,9 @@ Ultralytics YOLO on Axelera hardware enables advanced edge computing solutions:
 Verify your Axelera device is functioning properly:
 
 ```bash
-. /opt/axelera/sdk/latest/axelera_activate.sh
+# if axdevice cannot be found, please run at least one inference (see above) to ensure the required packages are installed
 axdevice
+
 ```
 
 For detailed diagnostics, see the [AxDevice documentation](https://github.com/axelera-ai-hub/voyager-sdk/blob/release/v1.5/docs/reference/axdevice.md).
@@ -249,8 +245,6 @@ See the [model-zoo](https://github.com/axelera-ai-hub/voyager-sdk/blob/release/v
 
 !!! warning "Known Limitations"
 
-    - **PyTorch 2.9 compatibility**: The first `yolo export format=axelera` command may fail due to automatic PyTorch downgrade to 2.8. Run the command a second time to succeed.
-
     - **M.2 power limitations**: Large or extra-large models may encounter runtime errors on M.2 accelerators due to power supply constraints.
 
     - **First inference ImportError**: The first inference run may throw an `ImportError`. Subsequent runs work correctly.
@@ -261,7 +255,7 @@ For support, visit the [Axelera Community](https://community.axelera.ai/).
 
 ### What YOLO versions are supported on Axelera?
 
-The Voyager SDK supports export of [YOLOv8](https://docs.ultralytics.com/models/yolov8/) and [YOLO26](https://docs.ultralytics.com/models/yolo26/) models.
+The Voyager SDK supports export of [YOLOv8](https://docs.ultralytics.com/models/yolov8/), [YOLO11](https://docs.ultralytics.com/models/yolo11/), and [YOLO26](https://docs.ultralytics.com/models/yolo26/) models. See [Supported Tasks](#supported-tasks) for per-model task availability.
 
 ### Can I deploy custom-trained models?
 
@@ -277,4 +271,4 @@ We recommend 100 to 400 images. More than 400 provides no additional benefit and
 
 ### Where can I find the Voyager SDK?
 
-The SDK, drivers, and compiler tools are available via the [Axelera Developer Portal](https://www.axelera.ai/).
+The SDK, drivers, and compiler tools are available via the [Axelera Developer Portal](https://github.com/axelera-ai-hub/voyager-sdk).
